@@ -1,0 +1,946 @@
+/* ==========================================================================
+   Kate's 19th Birthday Scrapbook Style CSS
+   ========================================================================== */
+
+/* Variables */
+:root {
+    --color-bg-deep: #0e0b0f;
+    --color-gold: #c5a059;
+    --color-gold-light: #e6cd9a;
+    --color-rose: #b76e79;
+    --color-rose-light: #d69fa8;
+    --color-cream: #faf7f2;
+    --color-text-light: #f5f3ef;
+    --color-text-muted: #a29ba5;
+    
+    --font-cursive: 'Alex Brush', cursive;
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-header: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+    
+    --shadow-premium: 0 2vmin 6vmin rgba(0, 0, 0, 0.45);
+    --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.25);
+    --border-radius-lg: 16px;
+    --border-radius-sm: 8px;
+    --transition-smooth: all 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-deep);
+    color: var(--color-text-light);
+    overflow: hidden; /* Desktop keeps it inside single screen */
+}
+
+/* Helper Utilities */
+.hidden {
+    display: none !important;
+}
+
+.opacity-0 {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Canvas Confetti */
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1500;
+}
+
+/* Splash Screen Welcome */
+.splash-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1b161f 0%, var(--color-bg-deep) 100%);
+    z-index: 2000;
+    transition: opacity 1s ease-in-out;
+}
+
+.splash-card {
+    text-align: center;
+    padding: 3.5rem;
+    max-width: 600px;
+    width: 90%;
+    border-radius: var(--border-radius-lg);
+    background: rgba(14, 11, 15, 0.85);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    box-shadow: var(--shadow-premium);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    animation: zoomFadeIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.splash-welcome {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--color-gold);
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+.splash-name {
+    font-family: var(--font-header);
+    font-size: 3.8rem;
+    color: var(--color-cream);
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(197, 160, 89, 0.25);
+    font-weight: 900;
+}
+
+.splash-tagline {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-gold) 0%, #a4813f 100%);
+    color: var(--color-bg-deep);
+    border: none;
+    padding: 1.1rem 2.8rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(197, 160, 89, 0.25);
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(197, 160, 89, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 100%);
+}
+
+/* Main Scrapbook Scene Layout */
+.scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #1a151d 0%, var(--color-bg-deep) 100%);
+    z-index: 10;
+}
+
+/* Ambient glowing spotlights */
+.ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background: radial-gradient(circle, rgba(197,160,89,0.06) 0%, rgba(183,110,121,0.04) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Floating Scrapbook Header */
+.header {
+    position: absolute;
+    top: 3.5vh;
+    text-align: center;
+    z-index: 120;
+    pointer-events: none;
+}
+
+.main-title {
+    font-family: 'Amatic SC', cursive;
+    font-size: clamp(3rem, 9.5vh, 7.5rem);
+    color: var(--color-cream);
+    letter-spacing: 3px;
+    line-height: 1;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.6);
+}
+
+/* Birthday Countdown Widget */
+.birthday-countdown-corner {
+    position: fixed;
+    top: 2.2rem;
+    right: 2rem;
+    z-index: 120;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-gold-light);
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    background: rgba(14, 11, 15, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-soft);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    pointer-events: auto;
+}
+
+/* 10 Absolute Positioned polaroid cards */
+.gallery-wall {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* lets user click through empty spots */
+    z-index: 10;
+}
+
+/* Giant polaroid style */
+.polaroid {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 1.5vmin;
+    padding-bottom: 2.6vmin;
+    box-shadow: 0 1.5vmin 4.5vmin rgba(0, 0, 0, 0.4);
+    width: 37.5vmin; /* Width matching the user's specific request */
+    z-index: 10;
+    transition: box-shadow 0.3s ease;
+    pointer-events: auto; /* enables interaction on cards */
+    cursor: pointer;
+}
+
+.polaroid:hover {
+    box-shadow: 0 3vmin 8vmin rgba(0, 0, 0, 0.6);
+    z-index: 150; /* Bring hovered card above center timer box */
+}
+
+/* Inner Carousel image container */
+.polaroid-img-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background-color: #f1f0ec;
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.polaroid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.polaroid img.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Tape on top of Polaroid */
+.tape {
+    position: absolute;
+    top: -2vmin;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12vmin;
+    height: 4vmin;
+    opacity: 0.65;
+    z-index: 15;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Label on polaroid card */
+.polaroid-label {
+    margin-top: 1.25vmin;
+    text-align: center;
+}
+
+.polaroid-date {
+    display: block;
+    font-family: var(--font-cursive);
+    font-size: 2.1vmin;
+    color: var(--color-rose);
+    line-height: 1.1;
+}
+
+.polaroid-caption {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.1vmin;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666666;
+    margin-top: 0.25vmin;
+}
+
+/* Desktop absolute positions are now dynamically handled via JS Orbit Loop */
+
+/* Central Countdown Frame */
+.timer-box {
+    position: relative;
+    width: 36vmin;
+    height: 52vmin;
+    border: 0.3vmin solid var(--color-gold);
+    background: #ffffff;
+    padding: 1.5vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2vmin 6vmin rgba(0,0,0,0.4);
+    z-index: 100; /* Stays on top of polaroids on initial view */
+    color: #1a1a1a;
+}
+
+.timer-box::after {
+    content: "";
+    position: absolute;
+    top: 0.6vmin; left: 0.6vmin; right: 0.6vmin; bottom: 0.6vmin;
+    border: 0.12vmin solid var(--color-gold);
+    pointer-events: none;
+}
+
+.it-been {
+    font-family: var(--font-sans);
+    font-size: 1.65vmin;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #444444;
+}
+
+.timer-row {
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+    justify-content: center;
+    margin: -0.4vmin 0;
+}
+
+.val {
+    font-family: var(--font-header);
+    font-size: 5.0vmin;
+    font-weight: 900;
+    min-width: 9vmin;
+    text-align: right;
+    margin-right: 1.2vmin;
+}
+
+.unit {
+    font-family: var(--font-header);
+    font-size: 3.5vmin;
+    font-weight: 700;
+    text-transform: uppercase;
+    min-width: 11vmin;
+    text-align: left;
+}
+
+/* Clock Row specific colors matching user setup */
+.c1 { color: #558b2f; }
+.c2 { color: #c2185b; }
+.c3 { color: #00796b; }
+.c4 { color: #1a237e; }
+.c5 { color: #006064; }
+.c6 { color: #bf360c; }
+
+
+/* Floating Bottom-Middle Audio Control Widget */
+.floating-audio-widget {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 160;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 40vw;
+    max-width: 420px;
+    min-width: 280px;
+    background: rgba(14, 11, 15, 0.75);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    border-radius: 50px;
+    padding: 0.8rem 1.6rem;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+.floating-audio-widget .audio-btn {
+    background: none;
+    border: none;
+    color: var(--color-gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.floating-audio-widget .audio-btn:hover {
+    transform: scale(1.15);
+}
+
+.floating-audio-widget .audio-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+}
+
+.audio-progress-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+#audio-progress {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+    cursor: pointer;
+}
+
+#audio-progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-gold);
+    cursor: pointer;
+}
+
+.audio-time-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    margin-top: 0.15rem;
+}
+
+.floating-audio-widget .audio-btn-small {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.floating-audio-widget .audio-btn-small:hover {
+    color: var(--color-cream);
+}
+
+.floating-audio-widget .audio-btn-small svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    fill: currentColor;
+}
+
+/* Floating Bottom-Left Album Button */
+.floating-album-btn {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 160;
+    background: linear-gradient(135deg, var(--color-gold) 0%, #a4813f 100%);
+    border: none;
+    color: var(--color-bg-deep);
+    padding: 0.9rem 1.8rem;
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.floating-album-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(197, 160, 89, 0.45);
+}
+
+/* Floating Bottom-Right Mode Toggle Widget */
+.mode-toggle-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 160;
+    display: flex;
+    background: rgba(14, 11, 15, 0.75);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    border-radius: 50px;
+    padding: 0.3rem;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+.mode-toggle-widget .toggle-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    padding: 0.6rem 1.4rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.mode-toggle-widget .toggle-btn.active {
+    background: linear-gradient(135deg, var(--color-gold) 0%, #a4813f 100%);
+    color: var(--color-bg-deep);
+    box-shadow: 0 4px 10px rgba(197, 160, 89, 0.25);
+}
+
+.mode-toggle-widget .toggle-btn:hover:not(.active) {
+    color: var(--color-cream);
+}
+
+/* Album Modal Overlay */
+.album-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 8, 11, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 1800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: drawerFadeIn 0.4s ease;
+}
+
+.album-modal-content {
+    width: 85vw;
+    max-width: 1000px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 2.2rem;
+}
+
+.album-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.8rem;
+}
+
+.album-modal-title {
+    font-family: var(--font-header);
+    font-size: 1.8rem;
+    color: var(--color-cream);
+}
+
+.album-modal-close {
+    font-size: 2.8rem;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.album-modal-close:hover {
+    color: var(--color-cream);
+    transform: scale(1.1);
+}
+
+.album-modal-grid-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-top: 1.5rem;
+    padding-right: 0.5rem;
+}
+
+.album-thumbnails-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 1rem;
+}
+
+.album-thumb-card {
+    background-color: #ffffff;
+    padding: 0.4rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border-radius: 1px;
+}
+
+.album-thumb-card:hover {
+    transform: scale(1.08) rotate(2deg);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    z-index: 5;
+}
+
+.album-thumb-img-wrapper {
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background-color: #eee;
+}
+
+.album-thumb-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album-thumb-num {
+    display: block;
+    font-size: 0.55rem;
+    text-align: center;
+    margin-top: 0.3rem;
+    color: #777;
+    font-family: var(--font-serif);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+
+
+/* 4. Lightbox Modal Layout */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(10, 8, 11, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lightbox img {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 4px;
+    border: 5px solid white;
+    box-shadow: var(--shadow-premium);
+    object-fit: contain;
+    animation: zoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lightbox-caption {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+#lightbox-date {
+    display: block;
+    font-family: var(--font-cursive);
+    font-size: 2.8rem;
+    color: var(--color-gold-light);
+    line-height: 1;
+}
+
+#lightbox-details {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 0.4rem;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 2.5rem;
+    font-size: 3.5rem;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.lightbox-close:hover {
+    color: var(--color-cream);
+    transform: scale(1.1);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    font-size: 3.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-cream);
+    border-color: var(--color-gold);
+}
+
+.lightbox-prev { left: 2.5rem; }
+.lightbox-next { right: 2.5rem; }
+
+
+/* Animations */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes zoomFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes drawerFadeIn {
+    from { opacity: 0; transform: scale(1.02); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+
+/* ==========================================================================
+   Responsive Viewport Styling (Mobile-friendly Stack)
+   ========================================================================== */
+@media (max-width: 900px) {
+    body, html {
+        overflow-y: auto;
+        height: auto;
+    }
+    
+    .scene {
+        padding-top: 100px;
+        padding-bottom: 120px;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .header {
+        position: relative;
+        top: 0;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .birthday-countdown-corner {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 0.8rem auto 0 auto;
+        display: inline-block;
+        font-size: 0.72rem;
+        padding: 0.4rem 1rem;
+    }
+    
+    /* Central Countdown transforms into dynamic card in normal scroll flow */
+    .timer-box {
+        width: 85vw;
+        height: auto;
+        padding: 2.5rem;
+        aspect-ratio: auto;
+        margin-bottom: 3.5rem;
+    }
+    
+    .it-been {
+        font-size: 1.1rem;
+    }
+    
+    .val {
+        font-size: 2.8rem;
+        min-width: 5rem;
+    }
+    
+    .unit {
+        font-size: 2rem;
+        min-width: 6rem;
+    }
+    
+    /* Absolute Positions overridden - dynamic flex row / column list */
+    .gallery-wall {
+        position: relative;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3.5rem;
+        padding: 0 1.5rem;
+    }
+    
+    .polaroid {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 78vw !important;
+        max-width: 320px;
+        transform: rotate(var(--rot-mob, 1.5deg)) !important;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    
+    .polaroid-date {
+        font-size: 1.5rem;
+    }
+    
+    .polaroid-caption {
+        font-size: 0.75rem;
+    }
+    
+    /* Floating controls adjustment */
+    .floating-audio-widget {
+        bottom: 1rem;
+        left: 1rem;
+        right: auto;
+        max-width: calc(100vw - 2rem);
+        padding: 0.5rem 1rem;
+    }
+    
+    .floating-audio-widget {
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100vw - 2rem);
+        max-width: 340px;
+        padding: 0.5rem 1.2rem;
+    }
+    
+    .floating-album-btn {
+        position: fixed;
+        bottom: 4.8rem;
+        left: 1rem;
+        padding: 0.8rem 1.4rem;
+        font-size: 0.8rem;
+        z-index: 160;
+    }
+
+    .mode-toggle-widget {
+        position: fixed;
+        bottom: 4.8rem;
+        right: 1rem;
+        z-index: 160;
+        padding: 0.2rem;
+    }
+
+    .mode-toggle-widget .toggle-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .lightbox-nav {
+        width: 48px;
+        height: 48px;
+        font-size: 2.2rem;
+    }
+    
+    .lightbox-prev { left: 0.4rem; }
+    .lightbox-next { right: 0.4rem; }
+    
+    .lightbox-close {
+        top: 1rem;
+        right: 1.2rem;
+        font-size: 2.8rem;
+    }
+}
