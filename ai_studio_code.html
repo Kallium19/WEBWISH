@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kate's Special Day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Playfair+Display:wght@700;900&family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+            background-color: #fdfcf8;
+            font-family: 'EB Garamond', serif;
+        }
+
+        .scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #ffffff 0%, #f1f1f1 100%);
+        }
+
+        /* Header */
+        .header {
+            position: absolute;
+            top: 3vh;
+            text-align: center;
+            z-index: 50; /* Above everything */
+            text-shadow: 0 0 10px white;
+        }
+
+        .main-title {
+            font-family: 'Amatic SC', cursive;
+            font-size: clamp(3rem, 10vh, 8rem);
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        /* The Central Countdown Frame */
+        .timer-box {
+            position: relative;
+            width: 48vmin;
+            height: 68vmin;
+            border: 0.4vmin solid #c5a059;
+            background: white;
+            padding: 2vmin;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2vmin 6vmin rgba(0,0,0,0.12);
+            z-index: 100; /* Stays on top of giant photos */
+        }
+
+        .timer-box::after {
+            content: "";
+            position: absolute;
+            top: 0.8vmin; left: 0.8vmin; right: 0.8vmin; bottom: 0.8vmin;
+            border: 0.15vmin solid #c5a059;
+            pointer-events: none;
+        }
+
+        .it-been {
+            font-size: 2.2vmin;
+            font-weight: bold;
+            margin-bottom: 1vmin;
+            color: #333;
+        }
+
+        .timer-row {
+            display: flex;
+            align-items: baseline;
+            width: 100%;
+            justify-content: center;
+            margin: -0.8vmin 0;
+        }
+
+        .val {
+            font-family: 'Playfair Display', serif;
+            font-size: 7vmin;
+            font-weight: 900;
+            min-width: 12vmin;
+            text-align: right;
+            margin-right: 1.5vmin;
+        }
+
+        .unit {
+            font-family: 'Playfair Display', serif;
+            font-size: 5vmin;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .c1 { color: #558b2f; } .c2 { color: #c2185b; } .c3 { color: #00796b; }
+        .c4 { color: #1a237e; } .c5 { color: #006064; } .c6 { color: #bf360c; }
+
+        /* GIANT POLAROIDS (37.5vmin) */
+        .polaroid {
+            position: absolute;
+            background: #fff;
+            padding: 1.5vmin;
+            padding-bottom: 2.5vmin;
+            box-shadow: 0 1.5vmin 4vmin rgba(0,0,0,0.15);
+            width: 37.5vmin; /* 50% bigger than previous 25vmin */
+            z-index: 10;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .polaroid img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            display: block;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .tape {
+            position: absolute;
+            top: -2vmin;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12vmin;
+            height: 4vmin;
+            opacity: 0.7;
+            z-index: 11;
+        }
+
+        /* Positions pushed further out to prevent blocking the central timer too much */
+        #p1 { top: 2%; left: -5%; transform: rotate(-8deg); }
+        #p2 { top: 40%; left: -8%; transform: rotate(6deg); }
+        #p3 { top: 75%; left: -4%; transform: rotate(-10deg); }
+        #p4 { top: 5%; left: 22%; transform: rotate(4deg); }
+        #p5 { top: 80%; left: 24%; transform: rotate(-3deg); }
+
+        #p6 { top: 2%; right: -5%; transform: rotate(8deg); }
+        #p7 { top: 30%; right: 22%; transform: rotate(-6deg); }
+        #p8 { top: 45%; right: -8%; transform: rotate(4deg); }
+        #p9 { top: 72%; right: 22%; transform: rotate(-5deg); }
+        #p10 { top: 82%; right: -4%; transform: rotate(9deg); }
+
+    </style>
+</head>
+<body>
+
+<div class="scene">
+    <div class="header">
+        <h1 class="main-title">HAPPY BIRTHDAY, KATE!</h1>
+    </div>
+
+    <div class="timer-box">
+        <span class="it-been">IT'S BEEN...</span>
+        
+        <div class="timer-row c1"><span class="val" id="y">--</span><span class="unit">Years</span></div>
+        <div class="timer-row c2"><span class="val" id="m">--</span><span class="unit">Months</span></div>
+        <div class="timer-row c3"><span class="val" id="d">--</span><span class="unit">Days</span></div>
+        <div class="timer-row c4"><span class="val" id="h">--</span><span class="unit">Hours</span></div>
+        <div class="timer-row c5"><span class="val" id="mi">--</span><span class="unit">Minutes</span></div>
+        <div class="timer-row c6"><span class="val" id="s">--</span><span class="unit">Seconds</span></div>
+
+        <span class="it-been" style="margin-top: 2vmin">SINCE YOU ARRIVED!</span>
+    </div>
+
+    <div id="gallery"></div>
+</div>
+
+<script>
+    // 1. Birth Date: 19 June 2007, 10:20 AM
+    const birthTime = new Date(2007, 5, 19, 10, 20, 0); 
+
+    const photoSets = [
+        { id: 'p1', t: '#ffb3ba', urls: ['https://picsum.photos/id/1011/800', 'https://picsum.photos/id/64/800'] },
+        { id: 'p2', t: '#bae1ff', urls: ['https://picsum.photos/id/1012/800', 'https://picsum.photos/id/1013/800'] },
+        { id: 'p3', t: '#baffc9', urls: ['https://picsum.photos/id/1014/800', 'https://picsum.photos/id/65/800'] },
+        { id: 'p4', t: '#ffffba', urls: ['https://picsum.photos/id/1015/800', 'https://picsum.photos/id/1016/800'] },
+        { id: 'p5', t: '#ffdfba', urls: ['https://picsum.photos/id/1018/800', 'https://picsum.photos/id/1019/800'] },
+        { id: 'p6', t: '#e1bfff', urls: ['https://picsum.photos/id/1020/800', 'https://picsum.photos/id/1021/800'] },
+        { id: 'p7', t: '#ffb3e6', urls: ['https://picsum.photos/id/1022/800', 'https://picsum.photos/id/1023/800'] },
+        { id: 'p8', t: '#b3fff5', urls: ['https://picsum.photos/id/237/800', 'https://picsum.photos/id/1025/800'] },
+        { id: 'p9', t: '#d1ffb3', urls: ['https://picsum.photos/id/1024/800', 'https://picsum.photos/id/1027/800'] },
+        { id: 'p10', t: '#f2f2f2', urls: ['https://picsum.photos/id/1005/800', 'https://picsum.photos/id/1011/800'] }
+    ];
+
+    // 2. COUNTER LOGIC
+    function updateClock() {
+        const now = new Date();
+        let years = now.getFullYear() - birthTime.getFullYear();
+        let months = now.getMonth() - birthTime.getMonth();
+        let days = now.getDate() - birthTime.getDate();
+        let hours = now.getHours() - birthTime.getHours();
+        let mins = now.getMinutes() - birthTime.getMinutes();
+        let secs = now.getSeconds() - birthTime.getSeconds();
+
+        if (secs < 0) { secs += 60; mins--; }
+        if (mins < 0) { mins += 60; hours--; }
+        if (hours < 0) { hours += 24; days--; }
+        if (days < 0) { days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); months--; }
+        if (months < 0) { months += 12; years--; }
+
+        document.getElementById('y').innerText = years;
+        document.getElementById('m').innerText = months;
+        document.getElementById('d').innerText = days;
+        document.getElementById('h').innerText = hours;
+        document.getElementById('mi').innerText = mins;
+        document.getElementById('s').innerText = secs;
+    }
+
+    // 3. GALLERY LOGIC (60s rotation)
+    function initGallery() {
+        const wall = document.getElementById('gallery');
+        photoSets.forEach(set => {
+            const div = document.createElement('div');
+            div.className = 'polaroid';
+            div.id = set.id;
+            div.innerHTML = `<div class="tape" style="background:${set.t}"></div><img src="${set.urls[0]}">`;
+            wall.appendChild(div);
+
+            let idx = 0;
+            // Switch images exactly every 60 seconds (60000ms)
+            setInterval(() => {
+                idx = (idx + 1) % set.urls.length;
+                const img = div.querySelector('img');
+                img.style.opacity = '0';
+                setTimeout(() => {
+                    img.src = set.urls[idx];
+                    img.style.opacity = '1';
+                }, 1000); // 1s cross-fade
+            }, 60000);
+        });
+    }
+
+    setInterval(updateClock, 1000);
+    initGallery();
+    updateClock();
+</script>
+</body>
+</html>
