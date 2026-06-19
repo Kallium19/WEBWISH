@@ -457,7 +457,17 @@ startBtn.addEventListener('click', () => {
         console.log("Audio autoplay blocked:", err);
     });
 
-    // 2. Show App & Hide Splash
+    // 2. Request Fullscreen Mode
+    const docEl = document.documentElement;
+    if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch(err => console.log("Fullscreen denied:", err));
+    } else if (docEl.webkitRequestFullscreen) {
+        docEl.webkitRequestFullscreen();
+    } else if (docEl.msRequestFullscreen) {
+        docEl.msRequestFullscreen();
+    }
+
+    // 3. Show App & Hide Splash
     splashScreen.classList.add('opacity-0');
     mainApp.classList.remove('hidden');
     
@@ -465,17 +475,17 @@ startBtn.addEventListener('click', () => {
         splashScreen.classList.add('hidden');
     }, 1000);
 
-    // 3. Start Live Clock
+    // 4. Start Live Clock
     setInterval(updateClock, 1000);
     updateClock();
 
-    // 4. Initial Confetti explosion
+    // 5. Initial Confetti explosion
     setTimeout(() => {
         confetti.burst(window.innerWidth / 4, window.innerHeight * 0.7, 70);
         confetti.burst(window.innerWidth * 3 / 4, window.innerHeight * 0.7, 70);
     }, 450);
 
-    // 5. Confetti rain reminder (every 7 seconds)
+    // 6. Confetti rain reminder (every 7 seconds)
     setInterval(() => {
         if (isPlaying) {
             confetti.rain(3);
